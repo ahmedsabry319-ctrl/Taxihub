@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxi Hub - حجز رحلة</title>
+    <style>
+        :root {
+         
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 20px 10px;
+            border-bottom: 4px solid var(--primary-color);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .header h1 span {
+            color: var(--primary-color);
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--dark-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(26, 26, 26, 0.2);
+        }
+
+        .btn-submit {
+            background-color: #25d366; /* لون الواتساب الأخضر */
+            color: white;
+            border: none;
+            padding: 14px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #1ebd58;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #777;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>TAXI <span>HUB</span></h1>
+        <p>بوابتك لرحلات وتوصيلات مريحة وآمنة</p>
+    </div>
+
+    <div class="container">
+        <form id="bookingForm">
+            <div class="form-group">
+                <label for="fullName">الاسم الكامل:</label>
+                <input type="text" id="fullName" required placeholder="أدخل اسمك الكريم">
+            </div>
+
+            <div class="form-group">
+                <label for="whatsapp">رقم الواتساب (مع كود الدولة):</label>
+                <input type="tel" id="whatsapp" required placeholder="مثال: 201xxxxxxxxx+">
+            </div>
+
+            <div class="form-group">
+                <label for="serviceType">نوع الخدمة المطلوبة:</label>
+                <select id="serviceType" required>
+                    <option value="" disabled selected>اختر الخدمة...</option>
+                    <option value="توصيل مطار">توصيل من/إلى المطار</option>
+                    <option value="مشوار داخلي">مشوار داخلي (تاكسي)</option>
+                    <option value="رحلة سياحية">رحلة سياحية (المحمية / بيانكا / إلخ)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="dateTime">تاريخ ووقت التحرك:</label>
+                <input type="datetime-local" id="dateTime" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pickup">مكان الاستلام (الفندق / الموقع):</label>
+                <input type="text" id="pickup" required placeholder="من أين سنتحرك؟">
+            </div>
+
+            <div class="form-group">
+                <label for="dropoff">الوجهة (مكان الوصول):</label>
+                <input type="text" id="dropoff" required placeholder="إلى أين تريد الذهاب؟">
+            </div>
+
+            <div class="form-group">
+                <label for="passengers">عدد الأفراد:</label>
+                <input type="number" id="passengers" min="1" default="1" required placeholder="عدد المسافرين">
+            </div>
+
+            <div class="form-group">
+                <label for="flightNumber">رقم الرحلة الجوية (اختياري لتوصيل المطار):</label>
+                <input type="text" id="flightNumber" placeholder="مثال: MS777">
+            </div>
+
+            <button type="button" class="btn-submit" onclick="sendToWhatsApp()">
+                تأكيد الحجز عبر الواتساب 💬
+            </button>
+        </form>
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Taxi Hub. جميع الحقوق محفوظة.
+    </div>
+
+    <script>
+        function sendToWhatsApp() {
+            // ضع رقم الواتساب الخاص بك هنا بكود الدولة بدون أصفار أو علامة +
+            // مثال: للرقم المصرى 01000000000 اكتب 201000000000
+            const myPhoneNumber = "201000000000"; 
+
+            // جلب القيم من النموذج
+            const name = document.getElementById('fullName').value;
+            const phone = document.getElementById('whatsapp').value;
+            const service = document.getElementById('serviceType').value;
+            const dateTime = document.getElementById('dateTime').value;
+            const pickup = document.getElementById('pickup').value;
+            const dropoff = document.getElementById('dropoff').value;
+            const passengers = document.getElementById('passengers').value;
+            const flight = document.getElementById('flightNumber').value || "لا يوجد";
+
+            // التأكد من ملء الحقول الإلزامية قبل الإرسال
+            if(!name || !phone || !service || !dateTime || !pickup || !dropoff || !passengers) {
+                alert("برجاء ملء كافة الحقول الأساسية قبل تأكيد الحجز.");
+                return;
+            }
+
+            // تنسيق نص الرسالة
+            const message = `*طلب حجز جديد من موقع Taxi Hub* \n\n` +
+                            `👤 *الاسم:* ${name}\n` +
+                            `📞 *الواتساب:* ${phone}\n` +
+                            `🗺️ *نوع الخدمة:* ${service}\n` +
+                            `📅 *التاريخ والوقت:* ${dateTime}\n` +
+                            `📍 *مكان الاستلام:* ${pickup}\n` +
+                            `🏁 *الوجهة:* ${dropoff}\n` +
+                            `👥 *عدد الأفراد:* ${passengers}\n` +
+                            `✈️ *رقم الرحلة الجوية:* ${flight}`;
+
+            // تحويل النص إلى رابط صالح للمتصفح
+            const whatsappUrl = `https://wa.me/${201021023002}?text=${encodeURIComponent(message)}`;
+
+            // فتح الواتساب في نافذة جديدة
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
